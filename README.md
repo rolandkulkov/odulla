@@ -12,3 +12,7 @@ WHMCS Compatibility: Seamlessly integrates with WHMCS, providing a user-friendly
 Go Application: The plugin communicates with a Go application, enhancing performance and ensuring a reliable connection for container orchestration.
 
 Scalability: Scale your containerized applications effortlessly, thanks to the robust integration with Docker and the flexibility provided by the Go application.
+
+## Getting Started
+### Start native development
+make dev
