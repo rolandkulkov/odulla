@@ -13,6 +13,6 @@ Go Application: The plugin communicates with a Go application, enhancing perform
 
 Scalability: Scale your containerized applications effortlessly, thanks to the robust integration with Docker and the flexibility provided by the Go application.
 
-##Getting Started
+## Getting Started
 ### Start native development
 make dev
