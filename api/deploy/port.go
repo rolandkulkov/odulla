@@ -10,15 +10,7 @@ import (
 // and also the check port is able to check one port if needed. So the whole code has to be separated into 3 script.
 func CheckPort(port int) bool {
 	protocol := "tcp"
-	conn, err := net.ListenTCP(protocol, &net.TCPAddr{IP: []byte{127, 0, 0, 1}, Port: port, Zone: ""})
-
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-	defer conn.Close()
-
-	conn, err = net.ListenTCP(protocol, &net.TCPAddr{IP: []byte{0, 0, 0, 0}, Port: port, Zone: ""})
+	conn, err := net.ListenTCP(protocol, &net.TCPAddr{IP: []byte{0, 0, 0, 0}, Port: port, Zone: ""})
 	if err != nil {
 		fmt.Println(err)
 		return false
