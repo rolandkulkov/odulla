@@ -4,10 +4,10 @@ tmp_dir = "tmp"
 
 [build]
   args_bin = []
-  bin = "./tmp/main"
-  cmd = "go build -buildvcs=false -o ./tmp/main ."
-  delay = 500
-  exclude_dir = []
+  bin = "tmp\\main.exe"
+  cmd = "go build -o ./tmp/main.exe ."
+  delay = 1000
+  exclude_dir = ["assets", "tmp", "vendor", "testdata"]
   exclude_file = []
   exclude_regex = ["_test.go"]
   exclude_unchanged = false
@@ -18,6 +18,10 @@ tmp_dir = "tmp"
   include_file = []
   kill_delay = "0s"
   log = "build-errors.log"
+  poll = false
+  poll_interval = 0
+  post_cmd = []
+  pre_cmd = []
   rerun = false
   rerun_delay = 500
   send_interrupt = false
