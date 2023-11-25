@@ -2,6 +2,9 @@ package main
 
 import (
 	"docker-deployer/api"
+	database "docker-deployer/repositories/gorm"
+	"fmt"
+
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -9,6 +12,13 @@ import (
 )
 
 func main() {
+
+	db, err := database.InitDB()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"*"},
