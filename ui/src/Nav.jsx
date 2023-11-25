@@ -8,6 +8,7 @@ export default function Navigation() {
 
   const navigation = [
     { name: 'Apps', href: '/websites' },
+    { name: 'Marketplace', href: '/marketplace' },
     //{ name: 'Domains', href: '/domains' }
   ];
   const pathname = window.location.pathname;

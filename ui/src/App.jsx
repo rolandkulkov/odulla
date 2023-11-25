@@ -1,6 +1,7 @@
 import { Router, Route } from "wouter";
 import Navigation from "./Nav.jsx";
 import Apps from "./pages/apps.jsx";
+import Marketplace from "./pages/marketplace.jsx";
 import WebsitesDetails from "./pages/websitesDetails.jsx";
 import Login from "./login.jsx";
 import Signup from "./signup.jsx";
@@ -28,6 +29,11 @@ export default function App() {
         <Route path="/websites">
           <Apps
             title="Apps"
+          />
+        </Route>
+        <Route path="/marketplace">
+          <Marketplace
+            title="Marketplace"
           />
         </Route>
         <Route path="/create-app">
