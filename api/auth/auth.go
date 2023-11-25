@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	database "docker-deployer/repositories/gorm"
+
 	"github.com/go-chi/render"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -18,8 +20,6 @@ type User struct {
 	Username string `gorm:"unique"`
 	Password string
 }
-
-var db *gorm.DB
 
 var secretKey = []byte("secret13456")
 
@@ -39,7 +39,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := User{Username: userInput.Username, Password: string(hashedPassword)}
-	err = db.Create(&user).Error
+	err = database.GlobalDB.Create(&user).Error
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
 		render.JSON(w, r, map[string]interface{}{"error": "Internal server error"})
@@ -60,7 +60,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	// Step 1: Check if the user exists
 
 	var user User
-	if err := db.Where("username = ?", userInput.Username).First(&user).Error; err != nil {
+	if err := database.GlobalDB.Where("username = ?", userInput.Username).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			render.Status(r, http.StatusUnauthorized)
 			render.JSON(w, r, map[string]interface{}{"error": "Invalid credentials"})

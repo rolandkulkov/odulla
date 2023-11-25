@@ -14,20 +14,19 @@ type User struct {
 	Password string
 }
 
-var db *gorm.DB
+var GlobalDB *gorm.DB
 
-func InitDB() (*gorm.DB, error) {
+func InitDB() {
 	dsn := "odulla:password@tcp(localhost:3306)/odulla?parseTime=true"
 	var err error
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	GlobalDB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Auto migrate the User model
-	err = db.AutoMigrate(&User{})
+	err = GlobalDB.AutoMigrate(&User{})
 	if err != nil {
 		log.Fatal(err)
 	}
-	return db, nil
 }
