@@ -3,16 +3,25 @@ import Navigation from "./Nav.jsx";
 import Apps from "./pages/apps.jsx";
 import WebsitesDetails from "./pages/websitesDetails.jsx";
 import Login from "./login.jsx";
+import Signup from "./signup.jsx";
 import Cookies from "js-cookie"
 import CreateApp from "./pages/createApp.jsx";
 
 export default function App() {
-  if (Cookies.get('token')) return <Login />
+  if (!Cookies.get('token')){
+    if(window.location.href.includes("signup")){
+      return <Signup/>
+    }
+    return <Login />
+  }
 
   return (
     <Router>
       <Route path="/login">
         <Login />
+      </Route>
+      <Route path="/signup">
+        <Signup />
       </Route>
       <Navigation />
       <main className="p-4 md:p-10 mx-auto max-w-7xl">
