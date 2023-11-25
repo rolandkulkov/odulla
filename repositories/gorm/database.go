@@ -1,18 +1,12 @@
 package database
 
 import (
+	"docker-deployer/models"
 	"log"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
-
-// User model
-type User struct {
-	ID       uint   `gorm:"primaryKey"`
-	Username string `gorm:"unique"`
-	Password string
-}
 
 var GlobalDB *gorm.DB
 
@@ -25,7 +19,7 @@ func InitDB() {
 	}
 
 	// Auto migrate the User model
-	err = GlobalDB.AutoMigrate(&User{})
+	err = GlobalDB.AutoMigrate(&models.User{})
 	if err != nil {
 		log.Fatal(err)
 	}

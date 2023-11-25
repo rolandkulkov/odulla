@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"docker-deployer/models"
 	database "docker-deployer/repositories/gorm"
 
 	"github.com/go-chi/render"
@@ -14,17 +15,10 @@ import (
 	"gorm.io/gorm"
 )
 
-// User model
-type User struct {
-	ID       uint   `gorm:"primaryKey"`
-	Username string `gorm:"unique"`
-	Password string
-}
-
 var secretKey = []byte("secret13456")
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	var userInput User
+	var userInput models.User
 	if err := render.DecodeJSON(r.Body, &userInput); err != nil {
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, map[string]interface{}{"error": "Invalid input"})
@@ -38,7 +32,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := User{Username: userInput.Username, Password: string(hashedPassword)}
+	user := models.User{Username: userInput.Username, Password: string(hashedPassword)}
 	err = database.GlobalDB.Create(&user).Error
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
@@ -50,16 +44,14 @@ func Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	var userInput User
+	var userInput models.User
 	if err := render.DecodeJSON(r.Body, &userInput); err != nil {
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, map[string]interface{}{"error": "Invalid input"})
 		return
 	}
 
-	// Step 1: Check if the user exists
-
-	var user User
+	var user models.User
 	if err := database.GlobalDB.Where("username = ?", userInput.Username).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			render.Status(r, http.StatusUnauthorized)
@@ -71,14 +63,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Step 2: Compare hashed password
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userInput.Password)); err != nil {
 		render.Status(r, http.StatusUnauthorized)
 		render.JSON(w, r, map[string]interface{}{"error": "Invalid credentials"})
 		return
 	}
 
-	// Step 3: Generate token
 	token, err := generateToken(user.ID)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
@@ -86,7 +76,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Step 4: Send token in the response
 	render.JSON(w, r, map[string]interface{}{"token": token})
 }
 
