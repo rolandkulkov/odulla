@@ -21,7 +21,11 @@ return (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
     {data?.map((n) => (
       <Card key={n.ID} className="bg-white p-4">
+        <img src={n.Image} />
         {n.Name}
+        <div>
+        <Button className="mt-5" size="lg">Deploy</Button>
+        </div>
       </Card>
     ))}
   </div>

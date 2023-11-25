@@ -21,6 +21,7 @@ func Routes() *chi.Mux {
 	})
 	r.Route("/marketplace", func(r chi.Router) {
 		r.Get("/", marketplace.ReadAll)
+		r.Delete("/app/{id}", marketplace.DeleteById)
 		r.Post("/add", marketplace.Create)
 	})
 	return r
