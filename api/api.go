@@ -19,8 +19,9 @@ func Routes() *chi.Mux {
 	r.Route("/signup", func(r chi.Router) {
 		r.Post("/", auth.Register)
 	})
-	r.Route("/marketplace/add", func(r chi.Router) {
-		r.Post("/", marketplace.Create)
+	r.Route("/marketplace", func(r chi.Router) {
+		r.Get("/", marketplace.ReadAll)
+		r.Post("/add", marketplace.Create)
 	})
 	return r
 }

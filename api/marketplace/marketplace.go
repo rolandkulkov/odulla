@@ -26,3 +26,14 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 	render.JSON(w, r, map[string]interface{}{"message": "App created successfully"})
 }
+
+func ReadAll(w http.ResponseWriter, r *http.Request) {
+	var existingApps []models.App
+	if err := database.GlobalDB.Find(&existingApps).Error; err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		render.JSON(w, r, map[string]interface{}{"error": "Internal server error"})
+		return
+	}
+
+	render.JSON(w, r, existingApps)
+}
