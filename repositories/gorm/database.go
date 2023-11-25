@@ -19,7 +19,7 @@ func InitDB() {
 	}
 
 	// Auto migrate the User model
-	err = GlobalDB.AutoMigrate(&models.User{})
+	err = GlobalDB.AutoMigrate(&models.User{}, &models.App{})
 	if err != nil {
 		log.Fatal(err)
 	}

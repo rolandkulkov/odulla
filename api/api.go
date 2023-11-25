@@ -3,6 +3,7 @@ package api
 import (
 	"docker-deployer/api/auth"
 	"docker-deployer/api/deploy"
+	"docker-deployer/api/marketplace"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -17,6 +18,9 @@ func Routes() *chi.Mux {
 	})
 	r.Route("/signup", func(r chi.Router) {
 		r.Post("/", auth.Register)
+	})
+	r.Route("/marketplace/add", func(r chi.Router) {
+		r.Post("/", marketplace.Create)
 	})
 	return r
 }
