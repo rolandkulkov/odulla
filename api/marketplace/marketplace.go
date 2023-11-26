@@ -66,3 +66,27 @@ func DeleteById(w http.ResponseWriter, r *http.Request) {
 
 	render.JSON(w, r, map[string]interface{}{"message": "App deleted successfully"})
 }
+func ReadByID(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, map[string]interface{}{"error": "ID is required"})
+		return
+	}
+
+	appID, err := strconv.ParseUint(id, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, map[string]interface{}{"error": "Invalid ID"})
+		return
+	}
+
+	var app models.App
+	if err := database.GlobalDB.First(&app, appID).Error; err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		render.JSON(w, r, map[string]interface{}{"error": "Internal server error"})
+		return
+	}
+
+	render.JSON(w, r, map[string]interface{}{"app": app})
+}

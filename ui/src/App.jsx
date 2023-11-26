@@ -41,6 +41,11 @@ export default function App() {
             title="Create App"
           />
         </Route>
+        <Route path="/create-app/:id">
+          <CreateApp
+            title="Create App"
+          />
+        </Route>
         <Route path="/websites/:id">
           <WebsitesDetails
             title="Files"
