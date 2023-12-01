@@ -12,6 +12,7 @@ type Image struct {
 	Config map[string]interface{} `json:"config"`
 	Port int `json:"port"`
 	ID string `json:"id"`
+	Token string `json:"token"`
 	Error string `json:"error"`
 }
 
@@ -25,3 +26,4 @@ func GetData(r *http.Request) (Image, error) {
 	image.Port = GetPort()
 	return image, nil
 }
+
