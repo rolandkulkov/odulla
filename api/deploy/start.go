@@ -4,6 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	"docker-deployer/api/auth"
+	"docker-deployer/models"
+	database "docker-deployer/repositories/gorm"
+
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
@@ -85,11 +89,20 @@ func PullImage(image string, tag string) error {
 
 // StartContainer start the container with the given image
 func StartContainer(image Image) (string, error){
+	// get the userid from the token
+	userid, err := auth.GetID(image.Token)
+	if err != nil {
+		return "Invalid token.", err
+	}
+
 	port := nat.Port(fmt.Sprintf("%v/tcp", image.Config["inside_port"]))
 	var env []string
-	for _, v := range image.Config["env"].([]interface{}) {
-		env = append(env, fmt.Sprintf("%v", v))
+	//check if the env is not nil or exists
+	if image.Config["env"] == nil {
+		for _, v := range image.Config["env"].([]interface{}) {
+			env = append(env, fmt.Sprintf("%v", v))
 	
+		}
 	}
 	containerConfig := &container.Config{
 		Image: fmt.Sprintf("%s:%s", image.Name, image.Tag),
@@ -117,6 +130,25 @@ func StartContainer(image Image) (string, error){
 
 	if err := cli.client.ContainerStart(context.Background(), resp.ID, types.ContainerStartOptions{}); err != nil {
 		return "", err
+	}
+
+	conainer, err := cli.client.ContainerInspect(context.Background(), resp.ID)
+	if err != nil {
+		return "Container has not started.", err
+	}  
+
+	// save the contaier to the database and add the userid to the container
+	app := models.App{
+		Name: conainer.Name,
+		Image: image.Name,
+		ContainerID: resp.ID,
+		Tag: image.Tag,
+		UserID: userid,
+	}
+
+	err = database.GlobalDB.Create(&app).Error
+	if err != nil {
+		return "Something went wrong while saving the container to the database.", err
 	}
 
 	return resp.ID, nil
