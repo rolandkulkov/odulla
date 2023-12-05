@@ -98,7 +98,7 @@ func StartContainer(image Image) (string, error){
 	port := nat.Port(fmt.Sprintf("%v/tcp", image.Config["inside_port"]))
 	var env []string
 	//check if the env is not nil or exists
-	if image.Config["env"] == nil {
+	if image.Config["env"] != nil {
 		for _, v := range image.Config["env"].([]interface{}) {
 			env = append(env, fmt.Sprintf("%v", v))
 	
