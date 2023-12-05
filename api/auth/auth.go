@@ -15,7 +15,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var secretKey = []byte("secret13456")
+var secretKey = []byte("secret")
 
 func Register(w http.ResponseWriter, r *http.Request) {
 	var userInput models.User
